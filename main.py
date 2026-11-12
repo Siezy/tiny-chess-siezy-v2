@@ -1,10 +1,10 @@
 import os,sys,json,urllib.request as H
 L=os.getenv('MAKEFUN_ENV_URL') or sys.exit()
 def R(p,d=None):
- q=H.Request(L+p,data=json.dumps(d or {}).encode(),headers={'Content-Type':'application/json'})
+ q=H.Request(L+p,data=json.dumps(d or{}).encode(),headers={'Content-Type':'application/json'})
  try:return json.load(H.urlopen(q))
  except:raise SystemExit
-W=(100,320,330,500,900,0);N=25000;B=[0]*128;S=1;C=0;E=-1;Y=[]
+W=(100,320,330,500,900,0);N=15000;B=[0]*128;S=1;C=0;E=-1;Y=[]
 def F(f):
  global B,S,C,E
  B=[0]*128;p=0
@@ -100,7 +100,11 @@ def V():
    s+=v if x>0 else -v
  return s*S
 T=0
+def Q():
+ global T;T+=1
+ if T>N:raise StopIteration
 def Z(a,b):
+ Q()
  s=V()
  if s>=b:return b
  if s>a:a=s
@@ -114,12 +118,10 @@ def Z(a,b):
   if v>a:a=v
  return a
 def A(d,a,b):
- global T
- T+=1
- if T>N:raise StopIteration
+ Q()
  if d<=0:return Z(a,b)
  m=G()
- m.sort(key=lambda mv:W[abs(B[mv[1]])-1]*10-W[abs(B[mv[0]])-1],reverse=True)
+ m.sort(key=lambda mv:W[abs(B[mv[1]])-1]*10-W[abs(B[mv[0]])-1],reverse=1)
  for f,t,pr in m:
   M(f,t,pr)
   if X(K(-S),S):
@@ -138,12 +140,12 @@ def main():
   F(g['fen']);bs=None;T=0
   for dp in range(1,30):
    try:
-    bb=None;bv=-999999
+    bb=None;bv=-9**9
     for f,t,pr in G():
      M(f,t,pr)
      if X(K(-S),S):
       U();continue
-     v=-A(dp-1,-999999,999999)
+     v=-A(dp-1,-9**9,9**9)
      U()
      if v>bv:bv=v;bb=(f,t,pr)
     if bb:bs=bb
