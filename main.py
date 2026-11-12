@@ -1,19 +1,19 @@
 import os,sys,json,urllib.request as H
 L=os.getenv('MAKEFUN_ENV_URL') or sys.exit()
-def R(p,d=None):
- q=H.Request(L+p,data=json.dumps(d or{}).encode(),headers={'Content-Type':'application/json'})
+def R(p,d=0):
+ q=H.Request(L+p,json.dumps(d or{}).encode())
  try:return json.load(H.urlopen(q))
- except:raise SystemExit
+ except:sys.exit()
 W=(100,320,330,500,900,0);N=15000;B=[0]*128;S=1;C=0;E=-1;Y=[]
 def F(f):
  global B,S,C,E
- B=[0]*128;p=0
- for r in reversed(f.split()[0].split('/')):
+ B=[0]*128;p=0;s=f.split()
+ for r in reversed(s[0].split('/')):
   for c in r:
    if c.isdigit():p+=int(c)
    else:B[p]=('PNBRQK'.find(c)+1) if c.isupper() else -('pnbrqk'.find(c)+1);p+=1
   p=(p//16+1)*16
- s=f.split();S=1 if s[1]=='w' else -1
+ S=2*(s[1]>'v')-1
  C=('K' in s[2])+2*('Q' in s[2])+4*('k' in s[2])+8*('q' in s[2])
  E=(int(s[3][1])-1)*16+ord(s[3][0])-97 if s[3]!='-' else -1
 def G(cap=False):
@@ -121,7 +121,7 @@ def A(d,a,b):
  Q()
  if d<=0:return Z(a,b)
  m=G()
- m.sort(key=lambda mv:W[abs(B[mv[1]])-1]*10-W[abs(B[mv[0]])-1],reverse=1)
+ m.sort(key=lambda x:W[abs(B[x[1]])-1]*10-W[abs(B[x[0]])-1],reverse=1)
  for f,t,pr in m:
   M(f,t,pr)
   if X(K(-S),S):
@@ -140,12 +140,13 @@ def main():
   F(g['fen']);bs=None;T=0
   for dp in range(1,30):
    try:
-    bb=None;bv=-9**9
+    bb=None;bv=-9e9
     for f,t,pr in G():
      M(f,t,pr)
      if X(K(-S),S):
       U();continue
-     v=-A(dp-1,-9**9,9**9)
+     try:v=-A(dp-1,-9e9,9e9)
+     except StopIteration:F(g['fen']);break
      U()
      if v>bv:bv=v;bb=(f,t,pr)
     if bb:bs=bb
@@ -153,4 +154,4 @@ def main():
   if not bs:bs=G()[0]
   f,t,pr=bs
   R('/move',{'game':g['game'],'move':u(f)+u(t)+('nbrq'[abs(pr)-2] if pr else '')})
-if __name__=='__main__':main()
+if'__main__'==__name__:main()
