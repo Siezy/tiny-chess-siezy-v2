@@ -88,13 +88,14 @@ def U():
 def K(w):
  return next((f for f in range(128) if B[f]==6*w),-1)
 def V():
- s=0;n=0;m=0
+ s=0;n=0;m=0;k=K(1);j=K(-1)
  for f in range(128):
   if f&8:continue
   x=B[f]
   if x:
    a=abs(x);i=(f//16)*8+f%16;v=W[a-1]+(3*int(P[i]) if x>0 else 3*int(P[63-i])) if a<6 else W[a-1]
    if a==3:n+=x>0;m+=x<0
+   if a==1 and(f-k if x>0 else j-f)in(15,16,17):s+=9 if x>0 else-9
    s+=v if x>0 else -v
  s+=25*(n>1)-25*(m>1)
  return s*S
