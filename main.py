@@ -4,7 +4,8 @@ def R(p,d=0):
  q=H.Request(L+p,json.dumps(d or{}).encode())
  try:return json.load(H.urlopen(q))
  except:sys.exit()
-W=(100,320,330,500,900,0);N=15000;B=[0]*128;S=1;C=0;E=-1;Y=[]
+W=(100,320,330,500,900,0);N=30000;B=[0]*128;S=1;C=0;E=-1;Y=[]
+P='1111111112222221234444322345543234566543345555434555555444444444'
 def F(f):
  global B,S,C,E
  B=[0]*128;p=0;s=f.split()
@@ -32,7 +33,7 @@ def G(cap=False):
    d=16*S;t=f+d
    if 0<=t<128 and not t&8 and not B[t] and not cap:
     A(f,t)
-    if (f//16==1 and S>0 or f//16==6 and S<0) and not B[f+2*d]:o.append((f,f+2*d,0))
+    if f//16==(1 if S>0 else 6) and not B[f+2*d]:o.append((f,f+2*d,0))
    for df in (-1,1):
     u=t+df
     if 0<=u<128 and not u&8 and (B[u]*S<0 or u==E):A(f,u)
@@ -50,12 +51,8 @@ def G(cap=False):
      if not cap:o.append((f,t,0))
      t+=d
  if not cap:
-  if S>0:
-   if C&1 and not B[5] and not B[6] and B[7]==4 and not X(4,-1) and not X(5,-1):o.append((4,6,0))
-   if C&2 and not B[3] and not B[2] and not B[1] and B[0]==4 and not X(4,-1) and not X(3,-1):o.append((4,2,0))
-  else:
-   if C&4 and not B[117] and not B[118] and B[119]==-4 and not X(116,1) and not X(117,1):o.append((116,118,0))
-   if C&8 and not B[115] and not B[114] and not B[113] and B[112]==-4 and not X(116,1) and not X(115,1):o.append((116,114,0))
+  for k,b,j,e,q,g in ((4,1,7,(5,6),5,6),(4,2,0,(3,2,1),3,2),(116,4,119,(117,118),117,118),(116,8,112,(115,114,113),115,114)):
+   if C&b and B[j]==4*S and not any(B[s] for s in e) and not X(k,-S) and not X(q,-S):o.append((k,g,0))
  return o
 def X(q,w):
  global S
@@ -74,7 +71,7 @@ def M(f,t,pr):
  Y.append((f,t,c,pr,C,E,ep))
  B[t]=pr if pr else B[f];B[f]=0
  if abs(B[t])==6 and abs(t-f)==2:
-  r=t+1 if t>f else t-2;s=t-1 if t>f else t+1;B[r]=0;B[s]=4*S
+  r=t+1-3*(t<f);s=t-1+2*(t<f);B[r]=0;B[s]=4*S
  E=(f+t)//2 if abs(B[t])==1 and abs(t-f)==32 else -1
  C&=~(D.get(f,0)|D.get(t,0))
  S=-S
@@ -83,7 +80,7 @@ def U():
  f,t,c,pr,oc,oe,ep=Y.pop()
  S=-S
  if abs(B[t])==6 and abs(t-f)==2:
-  r=t-1 if t>f else t+1;s=t+1 if t>f else t-2;B[r]=0;B[s]=4*S
+  r=t-1+2*(t<f);s=t+1-3*(t<f);B[r]=0;B[s]=4*S
  B[f]=B[t] if not pr else S
  B[t]=c*(1-ep)
  if ep:B[t-16*S]=-S
@@ -91,13 +88,15 @@ def U():
 def K(w):
  return next((f for f in range(128) if B[f]==6*w),-1)
 def V():
- s=0
+ s=0;n=0;m=0
  for f in range(128):
   if f&8:continue
   x=B[f]
   if x:
-   a=abs(x);v=W[a-1]
+   a=abs(x);i=(f//16)*8+f%16;v=W[a-1]+(3*int(P[i]) if x>0 else 3*int(P[63-i])) if a<6 else W[a-1]
+   if a==3:n+=x>0;m+=x<0
    s+=v if x>0 else -v
+ s+=25*(n>1)-25*(m>1)
  return s*S
 T=0
 def Q():
