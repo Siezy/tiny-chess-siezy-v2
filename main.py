@@ -1,8 +1,8 @@
-import os,sys,json,urllib.request as u
-V=os.getenv('MAKEFUN_ENV_URL') or sys.exit()
+import os,sys,json,urllib.request as H
+L=os.getenv('MAKEFUN_ENV_URL') or sys.exit()
 def R(p,d=None):
- q=u.Request(V+p,data=json.dumps(d).encode() if d else None,headers={'Content-Type':'application/json'})
- try:return json.load(u.urlopen(q))
+ q=H.Request(L+p,data=json.dumps(d or {}).encode(),headers={'Content-Type':'application/json'})
+ try:return json.load(H.urlopen(q))
  except:raise SystemExit
 W=(100,320,330,500,900,0);N=25000;B=[0]*128;S=1;C=0;E=-1;Y=[]
 def F(f):
