@@ -145,6 +145,7 @@ def main():
      M(f,t,pr)
      if X(K(-S),S):
       U();continue
+     if bs is None:bs=(f,t,pr)
      try:v=-A(dp-1,-9e9,9e9)
      except StopIteration:F(g['fen']);break
      U()
